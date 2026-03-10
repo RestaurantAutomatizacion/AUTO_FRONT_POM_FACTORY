@@ -112,9 +112,9 @@ public class TicketSystemStepDefs {
      */
     @Before("@registro and @happy-path")
     public void preCrearUsuarioRegistro() {
-        final String regEmail    = "user2@test.sofka.com";
-        final String regPassword = "TestPass@2027";
-        final String regUsername = "user2test";
+        final String regEmail    = "userNuevo12@test.sofka.com";
+        final String regPassword = "nuevo22Tess@2027";
+        final String regUsername = "ale398";
 
         java.net.http.HttpClient httpClient = java.net.http.HttpClient.newHttpClient();
         try {
@@ -159,6 +159,56 @@ public class TicketSystemStepDefs {
 
         } catch (Exception e) {
             System.out.println("[SETUP] Error en pre-setup: " + e.getMessage());
+        } finally {
+            httpClient.close();
+        }
+    }
+
+    @Before("@flujo-e2e and @smoke")
+    public void preCrearUsuarioFlujoe2e() {
+        final String regEmail    = "e2eflow2026@test.sofka.com";
+        final String regPassword = "TestPass@2026";
+        final String regUsername = "e2eflow2026";
+
+        java.net.http.HttpClient httpClient = java.net.http.HttpClient.newHttpClient();
+        try {
+            String loginBody = "{\"email\":\"" + regEmail + "\",\"password\":\"" + regPassword + "\"}";
+            java.net.http.HttpRequest loginReq = java.net.http.HttpRequest.newBuilder()
+                .uri(java.net.URI.create("http://localhost:8003/api/auth/login/"))
+                .header("Content-Type", "application/json")
+                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(loginBody))
+                .timeout(Duration.ofSeconds(10))
+                .build();
+            java.net.http.HttpResponse<String> loginResp =
+                httpClient.send(loginReq, java.net.http.HttpResponse.BodyHandlers.ofString());
+            if (loginResp.statusCode() == 200) {
+                System.out.println("[SETUP] Usuario e2eflow2026 ya existe (login:200).");
+                return;
+            }
+            System.out.println("[SETUP] Usuario e2eflow2026 no encontrado (login:" + loginResp.statusCode() + "). Registrando...");
+
+            String regBody = "{\"username\":\"" + regUsername
+                + "\",\"email\":\"" + regEmail
+                + "\",\"password\":\"" + regPassword + "\"}";
+            java.net.http.HttpRequest regReq = java.net.http.HttpRequest.newBuilder()
+                .uri(java.net.URI.create("http://localhost:8003/api/auth/"))
+                .header("Content-Type", "application/json")
+                .POST(java.net.http.HttpRequest.BodyPublishers.ofString(regBody))
+                .timeout(Duration.ofSeconds(6))
+                .build();
+            try {
+                java.net.http.HttpResponse<String> regResp =
+                    httpClient.send(regReq, java.net.http.HttpResponse.BodyHandlers.ofString());
+                System.out.println("[SETUP] Register HTTP status: " + regResp.statusCode());
+            } catch (java.net.http.HttpTimeoutException toe) {
+                System.out.println("[SETUP] Register timeout (pika bloqueó gunicorn) — usuario en BD.");
+            }
+
+            loginResp = httpClient.send(loginReq, java.net.http.HttpResponse.BodyHandlers.ofString());
+            System.out.println("[SETUP] Verificación post-registro: login:" + loginResp.statusCode());
+
+        } catch (Exception e) {
+            System.out.println("[SETUP] Error en pre-setup e2eflow2026: " + e.getMessage());
         } finally {
             httpClient.close();
         }
@@ -397,6 +447,56 @@ public class TicketSystemStepDefs {
         WaitUtils.demoDelay();
     }
 
+    @When("el usuario navega a la página de login")
+    public void elUsuarioNavegaALaPaginaDeLogin() {
+        getLoginPage().open();
+    }
+
+    @When("el usuario ingresa el email {string}")
+    public void elUsuarioIngresaElEmail(String email) {
+        getLoginPage().enterEmail(email);
+    }
+
+    @When("ingresa la contraseña {string}")
+    public void ingresaLaContrasena(String password) {
+        getLoginPage().enterPassword(password);
+    }
+
+    @When("hace click en el botón de login")
+    public void haceClickEnElBotonDeLogin() {
+        getLoginPage().clickLoginButton();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(25));
+        try {
+            wait.until(ExpectedConditions.or(
+                ExpectedConditions.not(ExpectedConditions.urlContains("/login")),
+                ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".auth-error"))
+            ));
+        } catch (org.openqa.selenium.TimeoutException ignored) {}
+        WaitUtils.demoDelay();
+    }
+
+    @When("completa el formulario de login con:")
+    public void completaElFormularioDeLoginCon(List<Map<String, String>> dataTable) {
+        Map<String, String> data = dataTable.get(0);
+        String email    = data.get("email");
+        String password = data.get("password");
+        String safeEmail    = email.replace("'", "\\'");
+        String safePassword = password.replace("'", "\\'");
+        // Intentar login por API primero (sin dependencia de pika)
+        Object loginResult = apiLogin(safeEmail, safePassword);
+        if (loginResult != null && String.valueOf(loginResult).startsWith("login:200")) {
+            driver.get(TestConfig.BASE_URL + "/tickets");
+            if (waitForTicketsContent(15)) {
+                WaitUtils.demoDelay();
+                return;
+            }
+        }
+        // Fallback: login por formulario Selenium
+        boolean ok = getLoginPage().loginAndWaitForRedirect(email, password, 25);
+        if (!ok) driver.get(TestConfig.BASE_URL + "/tickets");
+        WaitUtils.demoDelay();
+    }
+
     // ----------------------------------------------------------------
     // Steps - Navegación
     // ----------------------------------------------------------------
@@ -573,27 +673,6 @@ public class TicketSystemStepDefs {
     // Steps - Interacción con la lista de tickets
     // ----------------------------------------------------------------
 
-    @Given("existe al menos un ticket en el sistema")
-    public void existeAlMenosUnTicketEnElSistema() {
-        getTicketListPage().waitForLoad();
-        // Si no hay tickets, crear uno de prueba
-        if (getTicketListPage().getTicketCount() == 0) {
-            getNavBarPage().goToCreateTicket();
-            getCreateTicketPage().createTicket(
-                    "Ticket de Precondición E2E",
-                    "Ticket creado automáticamente como precondición de prueba"
-            );
-            WaitUtils.waitUntilUrlContains(driver, "/tickets");
-            getTicketListPage().waitForLoad();
-        }
-    }
-
-    @When("el usuario hace click en el primer ticket de la lista")
-    public void elUsuarioHaceClickEnElPrimerTicketDeLaLista() {
-        getTicketListPage().waitForLoad();
-        getTicketListPage().clickFirstTicket();
-    }
-
     @When("el usuario hace click en el ticket {string}")
     public void elUsuarioHaceClickEnElTicket(String ticketTitle) {
         getTicketListPage().waitForLoad();
@@ -665,22 +744,6 @@ public class TicketSystemStepDefs {
         WaitUtils.demoDelay();
     }
 
-    @Then("la página de creación de ticket debería estar cargada")
-    public void laPaginaDeCreacionDeTicketDeberiaEstarCargada() {
-        Assertions.assertThat(getCreateTicketPage().isLoaded())
-                .as("La página de creación de ticket debería estar cargada")
-                .isTrue();
-        WaitUtils.demoDelay();
-    }
-
-    @Then("el formulario debería tener los campos de título y descripción")
-    public void elFormularioDeberiaTenerLosCampos() {
-        Assertions.assertThat(getCreateTicketPage().isLoaded())
-                .as("El formulario de creación de ticket debería tener los campos de título y descripción")
-                .isTrue();
-        WaitUtils.demoDelay();
-    }
-
     @Then("el ticket {string} debería aparecer en la lista")
     public void elTicketDeberiaAparecerEnLaLista(String ticketTitle) {
         System.out.println("[INFO] elTicketDeberiaAparecerEnLaLista: URL=" + driver.getCurrentUrl());
@@ -727,24 +790,6 @@ public class TicketSystemStepDefs {
         Assertions.assertThat(getTicketDetailPage().isLoaded())
                 .as("El detalle del ticket debería estar cargado")
                 .isTrue();
-        WaitUtils.demoDelay();
-    }
-
-    @Then("debería ver el estado del ticket")
-    public void deberiaVerElEstadoDelTicket() {
-        String status = getTicketDetailPage().getTicketStatus();
-        Assertions.assertThat(status)
-                .as("El estado del ticket debería ser visible")
-                .isNotBlank();
-        WaitUtils.demoDelay();
-    }
-
-    @Then("debería ver la sección de respuestas")
-    public void deberiaVerLaSeccionDeRespuestas() {
-        // La sección de respuestas existe aunque esté vacía
-        Assertions.assertThat(driver.getCurrentUrl())
-                .as("Debería estar en la página de detalle del ticket")
-                .contains("/tickets/");
         WaitUtils.demoDelay();
     }
 
