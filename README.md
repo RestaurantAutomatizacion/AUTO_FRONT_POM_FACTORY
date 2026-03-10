@@ -95,10 +95,27 @@ La aplicación estará disponible en `http://localhost:3000`.
 Tras ejecutar los tests, el reporte HTML se genera en:
 
 ```
-target/site/serenity/index.html
+build/reports/serenity/index.html
 ```
 
 Abrir en el navegador para visualizar resultados detallados con capturas de pantalla.
+
+---
+
+## Archivos Ignorados por Git
+
+El `.gitignore` excluye los siguientes archivos y carpetas para evitar subir artefactos innecesarios:
+
+| Patrón | Descripción |
+|--------|-------------|
+| `build/` | Artefactos de compilación y reportes generados |
+| `target/` | Directorio de salida alternativo (Maven/Serenity) |
+| `.gradle/` | Caché local de Gradle |
+| `test_*.txt` | Logs de ejecución de tests (diagnóstico local) |
+| `.idea/` | Configuración del IDE IntelliJ IDEA |
+| `bin/` | Binarios compilados del IDE |
+
+> **Nota:** El wrapper de Gradle (`gradle/wrapper/gradle-wrapper.jar`) sí está incluido en Git para garantizar que cualquier colaborador pueda ejecutar el proyecto sin instalar Gradle manualmente.
 
 ---
 

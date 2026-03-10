@@ -1,4 +1,3 @@
-# language: es
 @e2e @flujo-completo
 Feature: Flujo completo E2E del Sistema de Tickets
 

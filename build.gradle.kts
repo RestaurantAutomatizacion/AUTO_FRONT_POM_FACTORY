@@ -56,21 +56,21 @@ tasks.test {
 }
 
 // ============================================================
-// Tarea personalizada: generar reporte Serenity HTML completo
+// Tarea: generar reporte Serenity HTML completo
+// CucumberWithSerenity ya genera el reporte durante los tests.
+// Esta tarea re-agrega los JSON en target/site/serenity si es necesario.
 // ============================================================
 tasks.register<JavaExec>("aggregate") {
     group = "Serenity BDD"
-    description = "Genera el reporte HTML de Serenity BDD con los resultados de los tests"
+    description = "Re-agrega los resultados JSON de Serenity en un reporte HTML"
 
-    mainClass.set("net.serenitybdd.cli.Serenity")
+    mainClass.set("net.thucydides.core.reports.html.HtmlAggregateStoryReporter")
     classpath = configurations.testRuntimeClasspath.get()
     args = listOf(
-        "--project", rootProject.name,
-        "--source", "target/site/serenity"
+        "--sourceDirectory", layout.buildDirectory.dir("../target/site/serenity").get().asFile.absolutePath,
+        "--outputDirectory", layout.buildDirectory.dir("../target/site/serenity").get().asFile.absolutePath,
+        "--projectName", rootProject.name
     )
-}
-
-// Ejecutar la generación de reporte automáticamente tras los tests
-tasks.named("test") {
-    finalizedBy("aggregate")
+    // Ignorar fallos en la agregación para no enmascarar fallos de tests
+    isIgnoreExitValue = true
 }
