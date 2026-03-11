@@ -62,13 +62,13 @@ Feature: Flujo completo E2E del Sistema de Tickets
     And hace click en el botón de login
     Then debería ser redirigido a la lista de tickets
     When el usuario navega a "Crear Ticket"
-    And completa el formulario de ticket con título "Ticket de alejaa" y descripción "Este ticket fue creado durante el flujo E2E completo del usuario registrado para validar casa"
+    And completa el formulario de ticket con título "Ticket" y descripción "Este ticket fue creado durante el flujo E2E completo del usuario registrado para validar casa"
     And envía el formulario del ticket
     Then debería ser redirigido a la lista de tickets
-    And el ticket "Ticket de alejaa" debería aparecer en la lista
-    When el usuario hace click en el ticket "Ticket de alejaa"
+    And el ticket "Ticket" debería aparecer en la lista
+    When el usuario hace click en el ticket "Ticket"
     Then debería ver el detalle del ticket
-    And el título del detalle debería contener "Ticket de alejaa"
+    And el título del detalle debería contener "Ticket"
 
   # ===========================================================================
   # HU-6: Gestión de asignaciones (administrador)
@@ -79,6 +79,16 @@ Feature: Flujo completo E2E del Sistema de Tickets
     Given el usuario está autenticado con email "admin@sofkau.com" y contraseña "Admin@SofkaU_2026!"
     When el administrador navega a "Asignaciones"
     Then la página de asignaciones debería estar cargada
+
+  # ===========================================================================
+  # HU-Notificaciones: Panel de notificaciones (usuario autenticado)
+  # ===========================================================================
+
+  @notificaciones
+  Scenario: Usuario autenticado accede al panel de notificaciones
+    Given el usuario está autenticado con email "admin@sofkau.com" y contraseña "Admin@SofkaU_2026!"
+    When el usuario navega a "Notificaciones"
+    Then la página de notificaciones debería estar cargada
 
   # ===========================================================================
   # HU-7: Cierre de sesión

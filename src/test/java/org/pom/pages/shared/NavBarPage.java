@@ -1,10 +1,10 @@
-package org.pom.pages;
+package org.pom.pages.shared;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.pom.utils.WaitUtils;
+import org.pom.utils.wait.WaitUtils;
 
 /**
  * Page Object para la barra de navegación (Navbar).

@@ -1,4 +1,4 @@
-package org.pom.pages;
+package org.pom.pages.auth;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -7,7 +7,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.pom.utils.WaitUtils;
+import org.pom.utils.config.TestConfig;
+import org.pom.utils.wait.WaitUtils;
 
 import java.time.Duration;
 
@@ -62,7 +63,7 @@ public class LoginPage {
      * Navega directamente a la página de login.
      */
     public void open() {
-        driver.get(org.pom.utils.TestConfig.BASE_URL + "/login");
+        driver.get(TestConfig.BASE_URL + "/login");
         WaitUtils.waitUntilVisible(driver, emailInput);
         WaitUtils.demoDelay();
     }
@@ -129,8 +130,8 @@ public class LoginPage {
      * <p>Devuelve {@code true} si el login fue exitoso (URL ya no contiene
      * {@code /login}) o {@code false} si apareció un error de autenticación.
      *
-     * @param email    correo del usuario
-     * @param password contraseña del usuario
+     * @param email          correo del usuario
+     * @param password       contraseña del usuario
      * @param timeoutSeconds tiempo máximo de espera para la redirección
      * @return {@code true} si redirigido fuera de /login, {@code false} si error
      */
@@ -138,7 +139,6 @@ public class LoginPage {
         login(email, password);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
         try {
-            // Esperar hasta que la URL salga de /login O aparezca un error visible
             wait.until(ExpectedConditions.or(
                 ExpectedConditions.not(ExpectedConditions.urlContains("/login")),
                 ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".auth-error"))

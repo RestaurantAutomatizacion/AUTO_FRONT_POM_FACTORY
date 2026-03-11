@@ -1,9 +1,10 @@
-package org.pom.utils;
+package org.pom.utils.wait;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.pom.utils.config.TestConfig;
 
 import java.time.Duration;
 

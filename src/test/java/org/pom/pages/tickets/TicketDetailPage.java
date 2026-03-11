@@ -1,10 +1,11 @@
-package org.pom.pages;
+package org.pom.pages.tickets;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.pom.utils.WaitUtils;
+import org.pom.utils.config.TestConfig;
+import org.pom.utils.wait.WaitUtils;
 
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class TicketDetailPage {
      * @param ticketId identificador del ticket
      */
     public void open(int ticketId) {
-        driver.get(org.pom.utils.TestConfig.BASE_URL + "/tickets/" + ticketId);
+        driver.get(TestConfig.BASE_URL + "/tickets/" + ticketId);
         WaitUtils.waitUntilVisible(driver, ticketTitle);
         WaitUtils.demoDelay();
     }

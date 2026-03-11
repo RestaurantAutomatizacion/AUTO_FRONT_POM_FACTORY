@@ -1,4 +1,4 @@
-package org.pom.pages;
+package org.pom.pages.tickets;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -6,7 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
-import org.pom.utils.WaitUtils;
+import org.pom.utils.config.TestConfig;
+import org.pom.utils.wait.WaitUtils;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class AssignmentListPage {
      * Navega a la página de asignaciones.
      */
     public void open() {
-        driver.get(org.pom.utils.TestConfig.BASE_URL + "/assignments");
+        driver.get(TestConfig.BASE_URL + "/assignments");
         WaitUtils.waitUntilUrlContains(driver, "/assignments");
         WaitUtils.demoDelay();
     }
@@ -142,13 +143,12 @@ public class AssignmentListPage {
     public boolean isTicketAssigned(String ticketTitle) {
         for (WebElement card : assignmentCards) {
             try {
-                WebElement title = card.findElement(By.cssSelector(".assignment-ticket-title, h3, h4, .ticket-title"));
+                WebElement title = card.findElement(
+                    By.cssSelector(".assignment-ticket-title, h3, h4, .ticket-title"));
                 if (title.getText().contains(ticketTitle)) {
                     return true;
                 }
-            } catch (Exception ignored) {
-                // elemento no encontrado en esta tarjeta
-            }
+            } catch (Exception ignored) {}
         }
         return false;
     }

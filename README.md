@@ -18,6 +18,7 @@ src/
     │       │   ├── CreateTicketPage.java
     │       │   ├── TicketDetailPage.java
     │       │   ├── AssignmentListPage.java
+    │       │   ├── NotificationListPage.java
     │       │   └── NavBarPage.java
     │       ├── stepdefs/                     # Step Definitions (Cucumber)
     │       │   ├── Hooks.java
@@ -79,6 +80,9 @@ La aplicación estará disponible en `http://localhost:3000`.
 
 # Tests del flujo admin
 ./gradlew test "-Dcucumber.filter.tags=@admin"
+
+# Panel de notificaciones
+./gradlew test "-Dcucumber.filter.tags=@notificaciones"
 ```
 
 **Bash / Git Bash / Linux / Mac:**
@@ -88,6 +92,7 @@ La aplicación estará disponible en `http://localhost:3000`.
 ./gradlew test -Dcucumber.filter.tags="@login"
 ./gradlew test -Dcucumber.filter.tags="@creacion-ticket"
 ./gradlew test -Dcucumber.filter.tags="@admin"
+./gradlew test -Dcucumber.filter.tags="@notificaciones"
 ```
 
 > **Nota PowerShell:** el carácter `@` es un operador especial en PowerShell. Si la propiedad `-D` no va entre comillas completas, PowerShell la interpreta incorrectamente y Gradle no la recibe. Siempre usar `"-Dpropiedad=valor"` en lugar de `-Dpropiedad="valor"`.
@@ -159,6 +164,7 @@ El `.gitignore` excluye los siguientes archivos y carpetas para evitar subir art
 | `@detalle-ticket @happy-path` | Acceso al detalle de un ticket |
 | `@flujo-e2e @smoke` | **Flujo E2E completo** (registro → ticket → detalle) |
 | `@asignaciones @admin` | Acceso a la vista de asignaciones (admin) |
+| `@notificaciones` | Acceso al panel de notificaciones (usuario autenticado) |
 | `@logout` | Cierre de sesión exitoso |
 
 ---

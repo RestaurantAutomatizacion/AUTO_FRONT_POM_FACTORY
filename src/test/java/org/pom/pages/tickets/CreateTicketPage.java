@@ -1,10 +1,11 @@
-package org.pom.pages;
+package org.pom.pages.tickets;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.pom.utils.WaitUtils;
+import org.pom.utils.config.TestConfig;
+import org.pom.utils.wait.WaitUtils;
 
 /**
  * Page Object para la página de creación de tickets.
@@ -59,7 +60,7 @@ public class CreateTicketPage {
      * Navega directamente a la página de creación de tickets.
      */
     public void open() {
-        driver.get(org.pom.utils.TestConfig.BASE_URL + "/tickets/new");
+        driver.get(TestConfig.BASE_URL + "/tickets/new");
         WaitUtils.waitUntilVisible(driver, titleInput);
         WaitUtils.demoDelay();
     }

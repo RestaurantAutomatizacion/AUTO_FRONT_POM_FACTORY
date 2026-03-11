@@ -1,4 +1,4 @@
-package org.pom.utils;
+package org.pom.utils.config;
 
 /**
  * Configuración centralizada de la automatización.
