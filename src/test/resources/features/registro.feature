@@ -12,4 +12,4 @@ Feature: Registro de usuario en el Sistema de Tickets
 
     Examples:
       | username | email                    | password        |
-      | Dani398 | userDani@test.sofka.com | Dani2Tess@2027 |
+      | Daniel398 | userDaniel@test.sofka.com | Daniel2Tess@2027 |

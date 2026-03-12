@@ -15,4 +15,4 @@ Feature: Flujo E2E completo del Sistema de Tickets
 
     Examples:
       | username    | email                      | password      | titulo         | descripcion                                  |
-      | e2eflow2027 | e2eflow2027@test.sofka.com | TestPass@2026 | Ticket de danii | Ticket creado de danii en flujo automatizado          |
+      | e2eflow2027 | e2eflow2027@test.sofka.com | TestPass@2026 | Ticket nuevo 2028 | Ticket creado #55 de danii en flujo automatizado          |
