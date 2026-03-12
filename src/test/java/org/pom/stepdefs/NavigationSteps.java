@@ -112,10 +112,6 @@ public class NavigationSteps {
         WaitUtils.demoDelay();
     }
 
-    // -------------------------------------------------------------------------
-    // BDD behavior-level steps
-    // -------------------------------------------------------------------------
-
     @Given("el administrador está autenticado en el sistema")
     public void elAdministradorEstaAutenticadoEnElSistema() {
         driver.get(TestConfig.BASE_URL);

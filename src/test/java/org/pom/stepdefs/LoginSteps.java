@@ -85,10 +85,6 @@ public class LoginSteps {
         WaitUtils.demoDelay();
     }
 
-    // -------------------------------------------------------------------------
-    // BDD behavior-level steps
-    // -------------------------------------------------------------------------
-
     @When("el usuario inicia sesión")
     public void elUsuarioIniciaSesion() {
         elUsuarioNavegaALaPaginaDeLogin();

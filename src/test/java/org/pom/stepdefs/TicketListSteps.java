@@ -81,10 +81,6 @@ public class TicketListSteps {
         WaitUtils.demoDelay();
     }
 
-    // -------------------------------------------------------------------------
-    // BDD behavior-level steps
-    // -------------------------------------------------------------------------
-
     @Then("el ticket {string} aparece en su lista de solicitudes")
     public void elTicketApareceEnSuListaDeSolicitudes(String ticketTitle) {
         elTicketDeberiaAparecerEnLaLista(ticketTitle);

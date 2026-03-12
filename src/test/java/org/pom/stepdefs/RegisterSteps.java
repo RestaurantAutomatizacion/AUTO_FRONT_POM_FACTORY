@@ -176,10 +176,6 @@ public class RegisterSteps {
         WaitUtils.demoDelay();
     }
 
-    // -------------------------------------------------------------------------
-    // BDD behavior-level steps
-    // -------------------------------------------------------------------------
-
     @When("el usuario se registra con usuario {string}, email {string} y contraseña {string}")
     public void elUsuarioSeRegistra(String username, String email, String password) {
         elUsuarioNavegaALaPaginaDeRegistro();

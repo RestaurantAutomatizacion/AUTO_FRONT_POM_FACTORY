@@ -135,10 +135,6 @@ public class CreateTicketSteps {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // BDD behavior-level step
-    // -------------------------------------------------------------------------
-
     @When("crea un ticket con título {string} y descripción {string}")
     public void creaUnTicket(String title, String description) {
         new NavBarPage(driver).goToCreateTicket();

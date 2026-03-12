@@ -18,10 +18,6 @@ public class Hooks {
     @Before
     public void setUp(Scenario scenario) {
         TestContext.reset();
-        System.out.println("=================================================");
-        System.out.println("Iniciando escenario: " + scenario.getName());
-        System.out.println("Tags: " + scenario.getSourceTagNames());
-        System.out.println("=================================================");
     }
 
     
